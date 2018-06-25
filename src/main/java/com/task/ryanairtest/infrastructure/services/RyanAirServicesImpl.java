@@ -94,7 +94,6 @@ public class RyanAirServicesImpl implements RyanAirServices {
                                                                    Date departureTime, Date arrivalTime, List<Interconnection> routes) {
         List<Interconnection> resInterconnection = new ArrayList<>();
 
-
         for (Interconnection interconnection: routes){
             List<Flight> legs = new ArrayList<>();
             for (Flight flight: interconnection.getLegs() ){

@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -34,7 +35,18 @@ public class RyanAirDAOImpl implements RyanAirDAO {
 
         Route[] routesList = restTemplate.getForObject(apiRoutesPath, Route[].class);
 
-        return Arrays.asList(routesList);
+        // Filter avoid routes with connect
+        return getFilterRoutes(routesList);
+    }
+
+    /**
+     * Filter routes , we get only with connectingAirport=null
+     * @param routesList
+     * @return
+     */
+    private List<Route> getFilterRoutes(Route[] routesList) {
+        return Arrays.asList(routesList).stream().filter(x -> x.getConnectingAirport() == null)
+                .collect(Collectors.toList());
     }
 
 

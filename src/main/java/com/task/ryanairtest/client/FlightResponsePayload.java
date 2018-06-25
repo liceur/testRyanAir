@@ -44,7 +44,7 @@ public class FlightResponsePayload {
     }
 
     public LocalDateTime getDepartureDateTime() {
-        return departureDateTime.withSecond(0);
+        return departureDateTime;
     }
 
     public void setDepartureDateTime(LocalDateTime departureDateTime) {

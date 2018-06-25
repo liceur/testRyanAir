@@ -14,7 +14,7 @@
         <Logger name="org.apache.coyote.http11.Http11NioProtocol" level="warn" />
         <Logger name="org.apache.tomcat.util.net.NioSelectorPool" level="warn" />
 
-        <Root level="DEBUG">
+        <Root level="INFO">
             <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
