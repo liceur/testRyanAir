@@ -1,9 +1,9 @@
 package com.task.ryanairtest.app;
 
-import com.task.ryanairtest.client.InterconnectionPayload;
-import com.task.ryanairtest.domain.services.RyanAirServices;
 import com.task.ryanairtest.client.FlightResponsePayload;
+import com.task.ryanairtest.client.InterconnectionPayload;
 import com.task.ryanairtest.domain.dto.Interconnection;
+import com.task.ryanairtest.domain.services.RyanAirServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

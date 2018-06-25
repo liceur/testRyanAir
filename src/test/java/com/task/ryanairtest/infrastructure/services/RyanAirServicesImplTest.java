@@ -7,10 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,19 +48,21 @@ public class RyanAirServicesImplTest {
     }
 
 
-    private List<Route> getMockRoutes() {
-        List<Route> routes = new ArrayList();
+    private Routes getMockRoutes() {
+        List<Route> routeListBCN = new ArrayList();
+        Route route1 = createRoute("BCN", "MAD");
+        routeListBCN.add(route1);
 
-        Route route1 = new Route();
-        route1.setAirportFrom("MAD");
-        route1.setAirportTo("BCN");
+        List<Route> routeListMAD = new ArrayList();
+        Route route2 = createRoute("MAD", "IBZ");
+        routeListMAD.add(route2);
 
-        Route route2 = new Route();
-        route2.setAirportFrom("BCN");
-        route2.setAirportTo("DUB");
+        Map<String, List<Route>> routeMap = new HashMap<String, List<Route>>();
+        routeMap.put("BCN", routeListBCN);
+        routeMap.put("MAD", routeListMAD);
 
-        routes.add(route1);
-        routes.add(route2);
+        Routes routes = new Routes();
+        routes.setRoutesMap(routeMap);
 
         return routes;
     }
@@ -95,4 +94,11 @@ public class RyanAirServicesImplTest {
         return df.format(new Date());
     }
 
+
+    private Route createRoute (String departure, String arrival){
+        Route route = new Route();
+        route.setAirportFrom(departure);
+        route.setAirportTo(arrival);
+        return route;
+    }
 }

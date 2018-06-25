@@ -2,6 +2,7 @@ package com.task.ryanairtest.infrastructure.dao;
 
 import com.task.ryanairtest.domain.dao.RyanAirDAO;
 import com.task.ryanairtest.domain.dto.Route;
+import com.task.ryanairtest.domain.dto.Routes;
 import com.task.ryanairtest.domain.dto.Schedules;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,11 +37,11 @@ public class RyanAirDAOImplTest {
     public void whenInvokeRouteTheCallRoutesDao(){
 
         // when
-        List<Route> res = ryanAirDAO.getRoutes();
+        Routes res = ryanAirDAO.getRoutes();
 
         // then
         assertThat(res != null);
-        assertThat( !res.isEmpty());
+
     }
 
     @Test
