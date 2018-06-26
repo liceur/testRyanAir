@@ -7,7 +7,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -18,19 +17,15 @@ public class TimeUtils {
             .getLogger(TimeUtils.class);
 
     private static final String ERROR_TO_CONVERT_STRING_TO_DATE = "Error to convert String to Date";
+    private static final String PATTERN_DATE = "yyyy-MM-dd'T'HH:mm";
 
     public static String toISO8601UTC(Date date) {
-        //TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        //df.setTimeZone(tz);
+        DateFormat df = new SimpleDateFormat(PATTERN_DATE);
         return df.format(date);
     }
 
     public static Date fromISO8601UTC(String dateStr) {
-        //TimeZone tz = TimeZone.getTimeZone("UTC");
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        //df.setTimeZone(tz);
-
+        DateFormat df = new SimpleDateFormat(PATTERN_DATE);
         try {
             return df.parse(dateStr);
         } catch (ParseException e) {

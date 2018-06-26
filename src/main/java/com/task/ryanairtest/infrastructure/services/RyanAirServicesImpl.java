@@ -5,6 +5,9 @@ import com.task.ryanairtest.app.TimeUtils;
 import com.task.ryanairtest.domain.dao.RyanAirDAO;
 import com.task.ryanairtest.domain.dto.*;
 import com.task.ryanairtest.domain.services.RyanAirServices;
+import com.task.ryanairtest.infrastructure.dao.RyanAirDAOImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class RyanAirServicesImpl implements RyanAirServices {
+
+    private static final Logger logger = LogManager.getLogger(RyanAirServicesImpl.class);
 
     @Autowired
     private RyanAirDAO ryanAirDAO;
@@ -61,11 +66,13 @@ public class RyanAirServicesImpl implements RyanAirServices {
                 Flight flight = createAirportsFlight(departure, arrival);
                 Interconnection direct = createInterconnection(0, Arrays.asList(flight));
                 directAndOneStopRoutes.add(direct);
+                logger.debug("Direct route added " + departure + "-" + arrival);
             } else {
                 // One stop routes
                 Interconnection withOneStop = createOneStopFlight(routes, route, departure, arrival);
                 if (withOneStop != null) {
                     directAndOneStopRoutes.add(withOneStop);
+                    logger.debug("One stop route added " + withOneStop.getLegs());
                 }
             }
         }
@@ -134,19 +141,7 @@ public class RyanAirServicesImpl implements RyanAirServices {
                     resFlight = res.get(0).getFlights().stream()
                             .map(
                                     x -> {
-                                        Flight newFlight = new Flight();
-                                        newFlight.setNumber(x.getNumber());
-                                        newFlight.setDeparture(flight.getDeparture());
-                                        newFlight.setArrival(flight.getArrival());
-
-                                        try {
-                                            newFlight.setDepartureTime(TimeUtils.getDateFromScheduleString(year, month, day, x.getDepartureTime()));
-                                            newFlight.setArrivalTime(TimeUtils.getDateFromScheduleString(year, month, day, x.getArrivalTime()));
-                                        } catch (ParseException e) {
-                                            newFlight.setDepartureTime(null);
-                                            newFlight.setArrivalTime(null);
-                                        }
-                                        return newFlight;
+                                        return createFlight(flight, year, month, day, x);
                                     }
                             ).collect(Collectors.toList());
                     legs.addAll(resFlight);
@@ -159,7 +154,43 @@ public class RyanAirServicesImpl implements RyanAirServices {
         return resInterconnection;
     }
 
+    /**
+     * Create a flight
+     * @param flight Incomplete flight
+     * @param year Year
+     * @param month Month
+     * @param day Day
+     * @param flightSchedules Data of flightSchedules
+     * @return Flight
+     */
+    private Flight createFlight(Flight flight, Integer year, Integer month, Integer day, FlightSchedules flightSchedules) {
+        Flight newFlight = new Flight();
+        newFlight.setNumber(flightSchedules.getNumber());
+        newFlight.setDeparture(flight.getDeparture());
+        newFlight.setArrival(flight.getArrival());
 
+        try {
+            newFlight.setDepartureTime(TimeUtils.getDateFromScheduleString(year, month, day, flightSchedules.getDepartureTime()));
+            newFlight.setArrivalTime(TimeUtils.getDateFromScheduleString(year, month, day, flightSchedules.getArrivalTime()));
+        } catch (ParseException e) {
+            logger.error("Error to parse time in Flight " + flight.getDeparture() + "-" + flight.getArrival());
+            newFlight.setDepartureTime(null);
+            newFlight.setArrivalTime(null);
+        }
+        return newFlight;
+    }
+
+
+    /**
+     * Match all results and create connections
+     * @param currentInterconnection Initial interconnection
+     * @param legs Legs of route
+     * @param departure Departure airport
+     * @param arrival Arrival airport
+     * @param departureTime Departure time
+     * @param arrivalTime Arrival time
+     * @return List of all possible connections
+     */
     private List<Interconnection> matchInterconnections(Interconnection currentInterconnection, List<Flight> legs,
                                                         String departure, String arrival, Date departureTime, Date arrivalTime) {
         List<Interconnection> resInterconnections = new ArrayList<>();
@@ -221,8 +252,6 @@ public class RyanAirServicesImpl implements RyanAirServices {
                 TimeUtils.addHours(flight.getArrivalTime(),2).before(other.getDepartureTime());
     }
 
-
-
     /**
      * Create a flight
      *
@@ -236,7 +265,6 @@ public class RyanAirServicesImpl implements RyanAirServices {
         flight.setArrival(arrival);
         return flight;
     }
-
 
     /**
      * Create a Interconnection flight

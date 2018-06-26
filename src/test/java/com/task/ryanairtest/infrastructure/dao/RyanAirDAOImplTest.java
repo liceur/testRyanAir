@@ -7,31 +7,30 @@ import com.task.ryanairtest.domain.dto.Schedules;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-test.properties")
 public class RyanAirDAOImplTest {
 
     private static final String DEPARTURE = "MAD";
     private static final String ARRIVAL = "BCN";
     private static final String YEAR = "2018";
-    private static final String MONTH = "1";
+    private static final String MONTH = "7";
+
+    @Autowired
     private RyanAirDAO ryanAirDAO;
 
-    @Before
-    public void init(){
-        ryanAirDAO = new RyanAirDAOImpl();
-    }
 
     @Test
     public void whenInvokeRouteTheCallRoutesDao(){
