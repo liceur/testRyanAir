@@ -5,7 +5,6 @@ import com.task.ryanairtest.app.TimeUtils;
 import com.task.ryanairtest.domain.dao.RyanAirDAO;
 import com.task.ryanairtest.domain.dto.*;
 import com.task.ryanairtest.domain.services.RyanAirServices;
-import com.task.ryanairtest.infrastructure.dao.RyanAirDAOImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +130,7 @@ public class RyanAirServicesImpl implements RyanAirServices {
                 if (schedules == null) {
                     break;
                 }
-                // TODO Joint two stream, filter day and hours in the same stream
+
                 // get schedules for a day in correct time
                 List<Days> res = schedules.getDays().stream().filter( x -> x.getDay() == day).collect(Collectors.toList());
 
