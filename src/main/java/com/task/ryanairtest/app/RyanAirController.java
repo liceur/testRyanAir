@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,30 +39,34 @@ public class RyanAirController {
         Date departureDateTime = TimeUtils.fromISO8601UTC(departureTime);
         Date arrivalDateTime = TimeUtils.fromISO8601UTC(arrivalTime);
 
-        // Call Service
-        List<Interconnection> interconnections = ryanAirServices.getInterconnections(
-                departure,
-                arrival,
-                departureDateTime,
-                arrivalDateTime);
+        List<InterconnectionPayload> result = new ArrayList<>();
 
-        // Map List<Interconnection> to List<InterconnectionsPayload>
-        List<InterconnectionPayload> result = interconnections.stream().map(temp -> {
+        if ( !departureDateTime.after(arrivalDateTime)) {
+            // Call Service
+            List<Interconnection> interconnections = ryanAirServices.getInterconnections(
+                    departure,
+                    arrival,
+                    departureDateTime,
+                    arrivalDateTime);
 
-            InterconnectionPayload obj = new InterconnectionPayload(
-                    temp.getStops(),
-                    temp.getLegs().stream().map(x -> {
-                        FlightResponsePayload flightResponsePayload = new FlightResponsePayload(
-                                x.getDeparture(),
-                                x.getArrival(),
-                                TimeUtils.convertDateToLocalDateTime(x.getDepartureTime()),
-                                TimeUtils.convertDateToLocalDateTime(x.getArrivalTime()));
-                        return flightResponsePayload;
-                    }).collect(Collectors.toList())
-            );
+            // Map List<Interconnection> to List<InterconnectionsPayload>
+            result = interconnections.stream().map(temp -> {
 
-            return obj;
-        }).collect(Collectors.toList());
+                InterconnectionPayload obj = new InterconnectionPayload(
+                        temp.getStops(),
+                        temp.getLegs().stream().map(x -> {
+                            FlightResponsePayload flightResponsePayload = new FlightResponsePayload(
+                                    x.getDeparture(),
+                                    x.getArrival(),
+                                    TimeUtils.convertDateToLocalDateTime(x.getDepartureTime()),
+                                    TimeUtils.convertDateToLocalDateTime(x.getArrivalTime()));
+                            return flightResponsePayload;
+                        }).collect(Collectors.toList())
+                );
+
+                return obj;
+            }).collect(Collectors.toList());
+        }
 
         return result;
     }
