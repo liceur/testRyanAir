@@ -1,8 +1,8 @@
 package com.task.ryanairtest.client;
 
 
-
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
@@ -12,7 +12,9 @@ public class FlightResponsePayload {
 
     private String departureAirport;
     private String arrivalAirport;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime departureDateTime;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime arrivalDateTime;
 
     @JsonCreator

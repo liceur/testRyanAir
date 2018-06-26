@@ -2,6 +2,7 @@ package com.task.ryanairtest.infrastructure.dao;
 
 import com.task.ryanairtest.domain.dao.RyanAirDAO;
 import com.task.ryanairtest.domain.dto.Route;
+import com.task.ryanairtest.domain.dto.Routes;
 import com.task.ryanairtest.domain.dto.Schedules;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -29,7 +31,7 @@ public class RyanAirDAOImpl implements RyanAirDAO {
     private RestTemplate restTemplate = new RestTemplate();
 
     @Override
-    public List<Route> getRoutes() {
+    public Routes getRoutes() {
 
         logger.debug("Load routes...");
 
@@ -44,9 +46,15 @@ public class RyanAirDAOImpl implements RyanAirDAO {
      * @param routesList
      * @return
      */
-    private List<Route> getFilterRoutes(Route[] routesList) {
-        return Arrays.asList(routesList).stream().filter(x -> x.getConnectingAirport() == null)
-                .collect(Collectors.toList());
+    private Routes getFilterRoutes(Route[] routesList) {
+        Map<String, List<Route>> result = Arrays.asList(routesList)
+                .stream()
+                .filter(x -> x.getConnectingAirport() == null)
+                .collect(Collectors.groupingBy(Route::getAirportFrom));
+
+        Routes routes = new Routes(result);
+        routes.setRoutesMap(result);
+        return routes;
     }
 
 
