@@ -192,6 +192,13 @@ public class RyanAirServicesImpl implements RyanAirServices {
         return resInterconnections;
     }
 
+    /**
+     * Check if a flight or interconnection time is valid.
+     * @param departureTime departure Time
+     * @param arrivalTime airport Time
+     * @param flights Flight or list or flight
+     * @return True is a flight/interconnection is correct
+     */
     private boolean checkInterconnectionTime(Date departureTime, Date arrivalTime, List<Flight> flights) {
         if ( flights.size() ==  1) {
             return !flights.get(0).getDepartureTime().before(departureTime) &&
@@ -215,40 +222,13 @@ public class RyanAirServicesImpl implements RyanAirServices {
     }
 
 
-    /**
-     * Check if the departure time,stop time between flights and arrival time is correct.
-     *
-     * @param legs          Array of flights
-     * @param departureTime departure time
-     * @param arrivalTime   arrival time
-     * @return
-     */
-    private Boolean checkTime(List<Flight> legs, Date departureTime, Date arrivalTime) {
-        // Direct flights
-        if (legs.size() == 1) {
-            return true;
-        } else {
-
-            Flight flight0 = legs.get(0);
-            Flight flight1 = legs.get(1);
-
-            if (flight0.getDepartureTime().after(departureTime) &&
-                    TimeUtils.addHours(flight0.getArrivalTime(), 2).before(flight1.getDepartureTime()) &&
-                    flight1.getArrivalTime().before(arrivalTime)) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
 
     /**
      * Create a flight
      *
-     * @param departure
-     * @param arrival
-     * @return
+     * @param departure Departure airport
+     * @param arrival Arrival Airport
+     * @return Flight
      */
     private Flight createAirportsFlight(String departure, String arrival) {
         Flight flight = new Flight();
@@ -261,9 +241,9 @@ public class RyanAirServicesImpl implements RyanAirServices {
     /**
      * Create a Interconnection flight
      *
-     * @param stops
-     * @param flightList
-     * @return
+     * @param stops Number of stop of interconnection
+     * @param flightList List of flight
+     * @return Interconnection
      */
     private Interconnection createInterconnection(Integer stops, List<Flight> flightList) {
         return new Interconnection(stops, flightList);
