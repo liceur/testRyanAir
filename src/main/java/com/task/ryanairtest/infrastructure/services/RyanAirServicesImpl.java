@@ -5,7 +5,6 @@ import com.task.ryanairtest.app.TimeUtils;
 import com.task.ryanairtest.domain.dao.RyanAirDAO;
 import com.task.ryanairtest.domain.dto.*;
 import com.task.ryanairtest.domain.services.RyanAirServices;
-import com.task.ryanairtest.infrastructure.dao.RyanAirDAOImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

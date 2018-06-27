@@ -1,10 +1,9 @@
 package com.task.ryanairtest.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Route {
 
     private String airportFrom;
@@ -18,7 +17,6 @@ public class Route {
     public Route() {
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
     public Route(String airportFrom, String airportTo, String connectingAirport, Boolean newRoute, Boolean seasonalRoute, String group) {
         this.airportFrom = airportFrom;
         this.airportTo = airportTo;
