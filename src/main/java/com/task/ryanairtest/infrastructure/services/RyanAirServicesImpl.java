@@ -124,10 +124,11 @@ public class RyanAirServicesImpl implements RyanAirServices {
                 final Integer day = TimeUtils.getDayOfDate(departureTime);
                 // get schedules of flights
                 Schedules schedules = ryanAirDAO.getSchedules(flight.getDeparture(), flight.getArrival(), String.valueOf(year), String.valueOf(month));
+
+                // If a schedules doesn't exist leave the interconnection
                 if (schedules == null) {
                     break;
                 }
-
                 // get schedules for a day in correct time
                 List<Days> daysList = schedules.getDays().stream().filter( x -> x.getDay() == day).collect(Collectors.toList());
 
