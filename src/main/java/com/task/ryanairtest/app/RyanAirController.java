@@ -28,6 +28,10 @@ public class RyanAirController {
     }
 
 
+    public RyanAirController(RyanAirServices ryanAirServices) {
+        this.ryanAirServices = ryanAirServices;
+    }
+
     @GetMapping("/interconnections")
     public List<InterconnectionPayload> getInterconnections(
             @RequestParam("departure") String departure,

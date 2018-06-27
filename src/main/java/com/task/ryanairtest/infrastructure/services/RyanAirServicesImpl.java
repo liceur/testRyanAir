@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,20 +128,20 @@ public class RyanAirServicesImpl implements RyanAirServices {
                 if (schedules == null) {
                     break;
                 }
-                // TODO Joint two stream, filter day and hours in the same stream
+
                 // get schedules for a day in correct time
-                List<Days> res = schedules.getDays().stream().filter( x -> x.getDay() == day).collect(Collectors.toList());
+                List<Days> daysList = schedules.getDays().stream().filter( x -> x.getDay() == day).collect(Collectors.toList());
 
                 // get info for flights in the day.
                 List<Flight> resFlight = null;
-                if (!res.isEmpty()) {
-                    resFlight = res.get(0).getFlights().stream()
-                            .map(
-                                    x -> {
-                                        return createFlight(flight, year, month, day, x);
-                                    }
-                            ).collect(Collectors.toList());
-                    legs.addAll(resFlight);
+                Optional<List<Flight>> res = daysList.stream().findFirst().map(
+                        x -> x.getFlights().stream().map(
+                                y -> {
+                                    return createFlight(flight, year, month, day, y);
+                                }
+                        ).collect(Collectors.toList()));
+                if ( res.isPresent() ) {
+                    legs.addAll(res.get());
                 }
             }
             // Join interconnections
